@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -345,9 +348,9 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Map'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Map'),
+      // ),
       body: Center(
         child: Text('Map Page Placeholder'),
       ),
@@ -359,9 +362,9 @@ class ReportsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Reports'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Reports'),
+      // ),
       body: Center(
         child: Text('Reports Page Placeholder'),
       ),
@@ -373,9 +376,9 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Account'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Account'),
+      // ),
       body: Center(
         child: Text('Account Page Placeholder'),
       ),

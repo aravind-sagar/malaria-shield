@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "747977136194",
+    "project_id": "malaria-tracker",
+    "storage_bucket": "malaria-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747977136194:android:b8050cc177cc3f010ab5db",
+        "android_client_info": {
+          "package_name": "com.example.malaria_shield"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwIq14qUBWlA3CbKvrA_Dy2swg7vOEQto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

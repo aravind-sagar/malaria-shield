@@ -1,0 +1,8 @@
+<resources>
+  <string name="google_app_id" translatable="false">1:747977136194:android:b8050cc177cc3f010ab5db</string>
+  <string name="gcm_defaultSenderId" translatable="false">747977136194</string>
+  <string name="firebase_database_url" translatable="false">https://malaria-tracker.firebaseio.com</string>
+  <string name="google_api_key" translatable="false">AIzaSyDWbF_fV3K1efWsrk8VdyoZmvFBompIFrE</string>
+  <string name="project_id" translatable="false">malaria-tracker</string>
+  <string name="storage_bucket" translatable="false">malaria-tracker.appspot.com</string>
+</resources>
