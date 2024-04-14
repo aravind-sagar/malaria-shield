@@ -8,12 +8,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: WelcomePage(),
+      home: StartPage(),
     );
   }
 }
 
-class WelcomePage extends StatelessWidget {
+class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +155,28 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class OTPVerificationPage extends StatelessWidget {
+class OTPVerificationPage extends StatefulWidget {
+  @override
+  _OTPVerificationPageState createState() => _OTPVerificationPageState();
+}
+
+class _OTPVerificationPageState extends State<OTPVerificationPage> {
+  late List<TextEditingController> _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = List.generate(6, (index) => TextEditingController());
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,18 +217,26 @@ class OTPVerificationPage extends StatelessWidget {
                         (index) => SizedBox(
                           width: 50.0,
                           height: 50.0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.8),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            alignment: Alignment.center,
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              maxLength: 1,
-                              decoration: InputDecoration(
-                                counterText: '',
-                                border: InputBorder.none,
+                          child: TextField(
+                            controller: _controllers[index],
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            maxLength: 1,
+                            onChanged: (value) {
+                              if (value.isNotEmpty) {
+                                if (index < _controllers.length - 1) {
+                                  FocusScope.of(context).nextFocus();
+                                }
+                              } else {
+                                if (index > 0) {
+                                  FocusScope.of(context).previousFocus();
+                                }
+                              }
+                            },
+                            decoration: InputDecoration(
+                              counterText: '',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
                           ),
@@ -247,21 +276,32 @@ class OTPVerificationPage extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  static List<Widget> _widgetOptions = <Widget>[
+    HomePageContent(),
+    MapPage(),
+    ReportsPage(),
+    AccountPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Center(
-        child: Text('Welcome to the Home Page!'),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        selectedItemColor: Colors.black, // Change the color of selected item
-        unselectedItemColor: Colors.black
-            .withOpacity(0.6), // Change the color of unselected item
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black.withOpacity(0.6),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -280,9 +320,64 @@ class HomePage extends StatelessWidget {
             label: 'Account',
           ),
         ],
-        onTap: (index) {
-          // Handle navigation to different pages based on index
-        },
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+}
+
+class HomePageContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('Welcome to the Home Page!'),
+    );
+  }
+}
+
+class MapPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Map'),
+      ),
+      body: Center(
+        child: Text('Map Page Placeholder'),
+      ),
+    );
+  }
+}
+
+class ReportsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reports'),
+      ),
+      body: Center(
+        child: Text('Reports Page Placeholder'),
+      ),
+    );
+  }
+}
+
+class AccountPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Account'),
+      ),
+      body: Center(
+        child: Text('Account Page Placeholder'),
       ),
     );
   }
