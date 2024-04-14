@@ -1,5 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+String globalVerficationID = "";
+String globalNumber = "";
+// Function to send OTP
+Future<void> sendOTP(String phoneNumber) async {
+  await FirebaseAuth.instance.verifyPhoneNumber(
+    phoneNumber: phoneNumber,
+    verificationCompleted: (PhoneAuthCredential credential) {
+      // Auto-sign in the user with the credential
+    },
+    verificationFailed: (FirebaseAuthException e) {
+      // Handle verification failed error
+    },
+    codeSent: (String verificationId, int? resendToken) {
+      // Save the verification ID and resend token for later use
+      globalVerficationID = verificationId;
+      print("verfication ID");
+      print(globalVerficationID);
+    },
+    codeAutoRetrievalTimeout: (String verificationId) {
+      // Handle auto-retrieval timeout
+    },
+  );
+}
+
+// Function to verify OTP
+Future<void> verifyOTP(String verificationId, String otp) async {
+  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+    verificationId: verificationId,
+    smsCode: otp,
+  );
+  await FirebaseAuth.instance.signInWithCredential(credential);
+}
+
+// Function to check if user exists in database
+Future<bool> checkIfUserExists(String phoneNumber) async {
+  // DataSnapshot snapshot = await FirebaseDatabase.instance
+  //     .reference()
+  //     .child('users')
+  //     .child(phoneNumber)
+  //     .once();
+  // return snapshot.value != null;
+  return false;
+}
+
+// Function to save user data in database
+Future<void> saveUserData(String phoneNumber) async {
+  DatabaseReference reference = FirebaseDatabase.instance.reference();
+  reference.child('users').child(phoneNumber).set({
+    'name': null,
+    'age': null,
+    'blood_group': null,
+    'gender': null,
+    'address': null,
+  });
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -123,17 +181,33 @@ class LoginPage extends StatelessWidget {
                           hintText: 'Phone Number',
                           border: InputBorder.none,
                         ),
+                        onChanged: (value) {
+                          globalNumber = value;
+                          print("number");
+                          print(value);
+                        },
                       ),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OTPVerificationPage(),
-                          ),
-                        );
+                      onPressed: () async {
+                        globalNumber = "+91" + globalNumber;
+                        if (await checkIfUserExists(globalNumber)) {
+                          // User exists, redirect to home page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        } else {
+                          // User doesn't exist, send OTP
+                          await sendOTP(globalNumber);
+                          // Navigate to OTP verification page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OTPVerificationPage()),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -157,6 +231,8 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+String otpVal = "";
 
 class OTPVerificationPage extends StatefulWidget {
   @override
@@ -230,9 +306,15 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                                 if (index < _controllers.length - 1) {
                                   FocusScope.of(context).nextFocus();
                                 }
+                                otpVal = otpVal + value;
+                                print("Add");
+                                print(otpVal);
                               } else {
                                 if (index > 0) {
                                   FocusScope.of(context).previousFocus();
+                                  otpVal = otpVal.substring(0, index);
+                                  print("back");
+                                  print(otpVal);
                                 }
                               }
                             },
@@ -248,12 +330,16 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        print("OTP:");
+                        print(otpVal);
+                        await verifyOTP(globalVerficationID, otpVal);
+                        // Save user data in database
+                        await saveUserData("+917907812548");
+                        // Navigate to home page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ),
+                          MaterialPageRoute(builder: (context) => HomePage()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
