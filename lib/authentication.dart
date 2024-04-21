@@ -41,6 +41,7 @@ Future<void> saveUserData(String phoneNumber, UserData userData) async {
     'gender': userData.gender,
     'dob': userData.dob.millisecondsSinceEpoch,
   });
+  print('User data saved: $userData');
 }
 
 Future<void> sendOTP(String phoneNumber) async {
@@ -80,10 +81,15 @@ class UserData {
   DateTime dob; // Added Date of Birth field
 
   UserData({
-    required this.name,
-    required this.location,
-    required this.bloodGroup,
-    required this.gender,
+    this.name = '',
+    this.location = '',
+    this.bloodGroup = '',
+    this.gender = '',
     required this.dob,
   });
+
+  @override
+  String toString() {
+    return 'UserData{name: $name, location: $location, bloodGroup: $bloodGroup, gender: $gender, dob: $dob}';
+  }
 }
