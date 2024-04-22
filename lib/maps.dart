@@ -1,20 +1,21 @@
 import 'dart:async';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 
+
 class MapPage extends StatefulWidget {
   static const LatLng sourceLocation = LatLng(26.132200, 28.118940);
-
+  
   @override
   State<MapPage> createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller = Completer();
-
+  
   LocationData? currentLocation;
 
   void getCurrentLocation() {
@@ -42,24 +43,32 @@ class _MapPageState extends State<MapPage> {
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
       ),
-      body: currentLocation == null
+      
+      body: Container(
+    child: Column(children: [
+      
+      SizedBox(
+        child: currentLocation == null
           ? const Center(child: Text("Loading..."))
           : GoogleMap(
-              initialCameraPosition:
-                  CameraPosition(target: LatLng(currentLocation!.latitude!, currentLocation!.longitude!), zoom: 14.5),
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                      currentLocation!.latitude!, currentLocation!.longitude!),
+                  zoom: 14.5),
               markers: {
                 Marker(
-                  markerId: MarkerId("currentLocation"),
-                  position: LatLng(
-                    currentLocation!.latitude!, currentLocation!.longitude!
-                  )
-                ),
+                    markerId: MarkerId("Your Location"),
+                    position: LatLng(currentLocation!.latitude!,
+                        currentLocation!.longitude!)),
                 Marker(
                   markerId: MarkerId("source"),
                   position: MapPage.sourceLocation,
                 ),
               },
             ),
+      )
+    ],),
+    ),
     );
   }
 }
