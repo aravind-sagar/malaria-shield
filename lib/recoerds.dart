@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -63,25 +62,16 @@ class _recordsState extends State<records> {
   }
 
   Future pickImageFromGallery() async {
-    try {
-      final returnedImage =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      if (returnedImage == null) return;
-      setState(() {
-        _selectImage = File(returnedImage.path);
-      });
-    } catch (e) {
-      var status = await Permission.photos.status;
-      if (status.isDenied) {
-        print('Access Denied');
-        showAlertDialog(context);
-      }
-    }
+    if (returnedImage == null) return;
+    setState(() {
+      _selectImage = File(returnedImage.path);
+    });
   }
 
   Future pickImageFromCamera() async {
-    try{
     final returnedImage =
         await ImagePicker().pickImage(source: ImageSource.camera);
 
@@ -89,32 +79,5 @@ class _recordsState extends State<records> {
     setState(() {
       _selectImage = File(returnedImage.path);
     });
-    }catch (e) {
-      var status = await Permission.photos.status;
-      if (status.isDenied) {
-        print('Access Denied');
-        showAlertDialog(context);
-      }
-    }
   }
-
-  showAlertDialog(context) => showCupertinoDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) => CupertinoAlertDialog(
-      title: const Text('Premission Denied'),
-      content: Text('Allow Access To Gallery And Photos'),
-      actions: <CupertinoDialogAction>[
-        CupertinoDialogAction(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancle'),
-        ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-          onPressed: () => openAppSettings(),
-          child: const Text('Settings'),
-        )
-      ]
-    )
-  );
 }
