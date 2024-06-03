@@ -35,13 +35,6 @@ class AccountPage extends StatelessWidget {
               subtitle: Text(userData.gender),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate back to sign up page
-                Navigator.pop(context);
-              },
-              child: Text('Edit'),
-            ),
           ],
         ),
       ),
