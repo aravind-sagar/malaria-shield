@@ -1,4 +1,3 @@
-// signup_page.dart
 import 'package:flutter/material.dart';
 import 'authentication.dart';
 import 'account_page.dart';
@@ -182,17 +181,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   gender: _gender,
                   dob: _dob,
                 );
-                // Navigate to home page first, then account page
+                saveUserData(globalNumber, userData);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => HomePage(),
-                  ),
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AccountPage(userData: userData),
                   ),
                 );
               }
